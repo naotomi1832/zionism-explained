@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>シオニズムを理解する — Understanding Zionism</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2333;
+  --text:#e6e1d8;--text-dim:#9ca3af;--text-bright:#f5f0e8;
+  --gold:#c9a84c;--gold-dim:#a8893a;--blue:#4a6fa5;
+  --accent-bg:rgba(201,168,76,0.08);--border:rgba(201,168,76,0.2);
+  --sidebar-w:260px;--header-h:60px;--content-max:820px;
+  --font-body:"Hiragino Kaku Gothic ProN","Noto Sans JP","Segoe UI",sans-serif;
+  --font-head:"Hiragino Mincho ProN","Noto Serif JP","Georgia",serif;
+}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h) + 20px)}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:17px;line-height:1.85;overflow-x:hidden}
+
+/* Header */
+.site-header{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:rgba(13,17,23,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:1000}
+.site-title{font-family:var(--font-head);font-size:18px;color:var(--gold);white-space:nowrap}
+.site-title span{color:var(--text-dim);font-size:13px;margin-left:8px}
+.controls{display:flex;align-items:center;gap:16px}
+.depth-toggle,.lang-toggle{display:flex;background:var(--bg2);border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.depth-toggle button,.lang-toggle button{background:none;border:none;color:var(--text-dim);padding:8px 16px;cursor:pointer;font-size:14px;font-family:var(--font-body);transition:all .25s}
+.depth-toggle button.active,.lang-toggle button.active{background:var(--gold);color:var(--bg);font-weight:600}
+.depth-toggle button:hover:not(.active),.lang-toggle button:hover:not(.active){color:var(--text);background:var(--bg3)}
+.hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
+
+/* Sidebar */
+.sidebar{position:fixed;top:var(--header-h);left:0;width:var(--sidebar-w);height:calc(100vh - var(--header-h));background:var(--bg2);border-right:1px solid var(--border);padding:24px 0;overflow-y:auto;z-index:900;transition:transform .3s}
+.sidebar nav{display:flex;flex-direction:column;gap:2px}
+.sidebar a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:var(--text-dim);text-decoration:none;font-size:14px;transition:all .25s;border-left:3px solid transparent}
+.sidebar a:hover{color:var(--text);background:var(--bg3)}
+.sidebar a.active{color:var(--gold);border-left-color:var(--gold);background:var(--accent-bg)}
+.sidebar .nav-num{font-family:var(--font-head);font-size:18px;color:var(--gold-dim);min-width:24px;text-align:center}
+.sidebar .nav-label{line-height:1.3}
+
+/* Main */
+.main{margin-left:var(--sidebar-w);padding-top:var(--header-h)}
+.section{padding:80px 40px;min-height:60vh;border-bottom:1px solid rgba(201,168,76,0.08)}
+.section:last-child{border-bottom:none}
+.section-inner{max-width:var(--content-max);margin:0 auto}
+
+/* Hero */
+.hero{min-height:90vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 40px}
+.hero-inner{max-width:700px}
+.hero h1{font-family:var(--font-head);font-size:clamp(32px,5vw,56px);color:var(--text-bright);line-height:1.3;margin-bottom:16px}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero .subtitle{font-size:18px;color:var(--text-dim);margin-bottom:40px;line-height:1.7}
+.hero .scroll-hint{color:var(--gold-dim);font-size:14px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* Section Headers */
+.section-num{font-family:var(--font-head);font-size:64px;color:rgba(201,168,76,0.12);line-height:1;margin-bottom:-20px}
+.section h2{font-family:var(--font-head);font-size:clamp(24px,3.5vw,36px);color:var(--text-bright);margin-bottom:8px;line-height:1.3}
+.section h2 .en-sub{display:block;font-size:16px;color:var(--gold-dim);font-weight:400;margin-top:4px}
+.section-lead{font-size:18px;color:var(--text-dim);margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+
+/* Content Blocks */
+.depth-content{display:none;animation:fadeUp .5s ease}
+.depth-content.visible{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.lang-ja:not(.visible),.lang-en:not(.visible){display:none!important}
+.lang-ja.visible,.lang-en.visible{display:block}
+
+/* Typography */
+.content-body h3{font-family:var(--font-head);font-size:22px;color:var(--gold);margin:40px 0 16px;padding-left:16px;border-left:3px solid var(--gold)}
+.content-body h4{font-size:18px;color:var(--text-bright);margin:32px 0 12px}
+.content-body p{margin-bottom:20px}
+.content-body ul,.content-body ol{margin:0 0 20px 24px}
+.content-body li{margin-bottom:8px}
+
+/* Special Blocks */
+.highlight-box{background:var(--accent-bg);border-left:4px solid var(--gold);padding:20px 24px;border-radius:0 8px 8px 0;margin:24px 0}
+.highlight-box .box-title{font-weight:600;color:var(--gold);font-size:15px;margin-bottom:8px}
+.key-point{background:var(--bg3);border:1px solid var(--border);padding:20px 24px;border-radius:8px;margin:24px 0;position:relative}
+.key-point::before{content:"";position:absolute;top:-1px;left:24px;right:24px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.timeline{position:relative;padding-left:32px;margin:32px 0}
+.timeline::before{content:"";position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border)}
+.timeline-item{position:relative;margin-bottom:28px}
+.timeline-item::before{content:"";position:absolute;left:-28px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
+.timeline-date{font-size:14px;color:var(--gold);font-weight:600;margin-bottom:4px}
+.timeline-text{color:var(--text)}
+.term{color:var(--gold);cursor:help;border-bottom:1px dotted var(--gold-dim);position:relative}
+.pullquote{font-family:var(--font-head);font-size:22px;color:var(--text-bright);text-align:center;padding:32px 40px;margin:40px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);line-height:1.6}
+.pullquote .attr{font-size:14px;color:var(--gold-dim);font-family:var(--font-body);margin-top:12px}
+
+/* Tooltip */
+.tooltip{position:fixed;background:var(--bg3);color:var(--text);border:1px solid var(--gold-dim);border-radius:8px;padding:12px 16px;font-size:14px;max-width:320px;line-height:1.6;z-index:2000;pointer-events:none;opacity:0;transition:opacity .2s;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.tooltip.show{opacity:1}
+
+/* Scroll Animation */
+.anim{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s}
+.anim.in-view{opacity:1;transform:none}
+
+/* Mobile */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .hamburger{display:block}
+  .site-title span{display:none}
+  .section{padding:60px 20px}
+  .hero{padding:60px 20px}
+  .controls{gap:8px}
+  .depth-toggle button,.lang-toggle button{padding:6px 10px;font-size:13px}
+}
+@media(max-width:600px){
+  .section-num{font-size:40px}
+  .pullquote{font-size:18px;padding:24px 20px}
+}
+
+/* Footer */
+.site-footer{text-align:center;padding:60px 20px;color:var(--text-dim);font-size:14px;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+  <div class="site-title">シオニズムを理解する<span>Understanding Zionism</span></div>
+  <div class="controls">
+    <div class="depth-toggle" role="group" aria-label="深度切り替え">
+      <button data-depth="intro" class="active">入門</button>
+      <button data-depth="standard">標準</button>
+      <button data-depth="expert">専門</button>
+    </div>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button data-lang="ja" class="active">日本語</button>
+      <button data-lang="en">EN</button>
+    </div>
+  </div>
+</header>
+
+<aside class="sidebar" id="sidebar">
+  <nav>
+    <a href="#hero"><span class="nav-num">&mdash;</span><span class="nav-label lang-ja visible">はじめに</span><span class="nav-label lang-en">Introduction</span></a>
+    <a href="#s1"><span class="nav-num">1</span><span class="nav-label lang-ja visible">シオニズムとは何か</span><span class="nav-label lang-en">What is Zionism?</span></a>
+    <a href="#s2"><span class="nav-num">2</span><span class="nav-label lang-ja visible">聖書の「約束の地」</span><span class="nav-label lang-en">The "Promised Land"</span></a>
+    <a href="#s3"><span class="nav-num">3</span><span class="nav-label lang-ja visible">近代シオニズムの誕生</span><span class="nav-label lang-en">Birth of Modern Zionism</span></a>
+    <a href="#s4"><span class="nav-num">4</span><span class="nav-label lang-ja visible">キリスト教シオニズム</span><span class="nav-label lang-en">Christian Zionism</span></a>
+    <a href="#s5"><span class="nav-num">5</span><span class="nav-label lang-ja visible">福音派とイスラエル</span><span class="nav-label lang-en">Evangelicals &amp; Israel</span></a>
+    <a href="#s6"><span class="nav-num">6</span><span class="nav-label lang-ja visible">アメリカ政治の中で</span><span class="nav-label lang-en">In American Politics</span></a>
+    <a href="#s7"><span class="nav-num">7</span><span class="nav-label lang-ja visible">今日と未来</span><span class="nav-label lang-en">Today &amp; Future</span></a>
+  </nav>
+</aside>
+
+<div class="main">
+
+<!-- Hero -->
+<section class="section hero" id="hero">
+  <div class="hero-inner anim">
+    <div class="lang-ja visible">
+      <h1><em>シオニズム</em>を<br>理解する</h1>
+      <p class="subtitle">「約束の地」の思想は、なぜ21世紀のアメリカ政治を動かし続けるのか。<br>古代の契約から現代の超大国まで、7つの章で紐解く。</p>
+    </div>
+    <div class="lang-en">
+      <h1>Understanding<br><em>Zionism</em></h1>
+      <p class="subtitle">Why does the idea of a "Promised Land" continue to shape American politics in the 21st century?<br>Seven chapters trace the thread from ancient covenant to modern superpower.</p>
+    </div>
+    <div class="scroll-hint lang-ja visible">&#9660; スクロールして探索する</div>
+    <div class="scroll-hint lang-en">&#9660; Scroll to explore</div>
+  </div>
+</section>
+
+<!-- Section 1 -->
+<section class="section" id="s1">
+<div class="section-inner">
+  <div class="section-num anim">01</div>
+  <h2 class="anim">
+    <span class="lang-ja visible">シオニズムとは何か</span>
+    <span class="lang-en">What is Zionism?</span>
+    <span class="en-sub lang-ja visible">What is Zionism?</span>
+    <span class="en-sub lang-en">Definition and Origins</span>
+  </h2>
+  <p class="section-lead anim">
+    <span class="lang-ja visible">2000年以上の離散を経て「自分たちの国を持ちたい」と願ったユダヤ人の運動。しかし、その一言では語り尽くせない。</span>
+    <span class="lang-en">A movement born from over 2,000 years of diaspora: the Jewish aspiration for a homeland. But that one sentence barely scratches the surface.</span>
+  </p>
+
+  <div class="depth-content visible" data-depth="intro">
+    <div class="content-body lang-ja visible">
+      <div class="highlight-box anim">
+        <div class="box-title">ひとことで言うと</div>
+        <p>シオニズムとは、「ユダヤ人が自分たちの故郷で、自分たちの国を持つべきだ」という考え方です。「シオン」はエルサレムにある丘の名前で、ユダヤ人にとっての精神的な故郷を象徴しています。</p>
+      </div>
+      <h3>なぜこの運動が生まれたのか</h3>
+      <p>想像してみてください。あなたの家族が何世代にもわたって「よそ者」として暮らし、時に迫害を受けてきたとします。祖父母の祖父母のそのまた先祖から、「私たちにはもともと故郷があった」という物語が語り継がれています。</p>
+      <p>ユダヤ人はまさにこの状況を2000年以上経験してきました。ヨーロッパ各地で差別や暴力にさらされる中、19世紀後半に「もう待てない。自分たちの国を作ろう」という声が大きくなりました。これがシオニズム運動の始まりです。</p>
+      <div class="key-point anim">
+        <p><strong>覚えておきたいポイント：</strong>シオニズムは単なる「土地がほしい」という話ではありません。何世紀にもわたる<span class="term" data-tip-ja="特定の集団に対する憎悪や差別。ユダヤ人の場合は「反ユダヤ主義」と呼ばれる" data-tip-en="Hatred or discrimination against a specific group. For Jewish people, it is called 'antisemitism'">迫害</span>からの「安全な場所がほしい」という切実な願いから生まれた運動です。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <div class="highlight-box anim">
+        <div class="box-title">In a nutshell</div>
+        <p>Zionism is the idea that Jewish people should have their own homeland and nation. The word "Zion" comes from a hill in Jerusalem that symbolizes the Jewish spiritual home.</p>
+      </div>
+      <h3>Why did this movement emerge?</h3>
+      <p>Imagine your family had lived as outsiders for generations, sometimes facing persecution. From your grandparents' grandparents and beyond, a story has been passed down: "We once had a homeland."</p>
+      <p>Jewish people experienced exactly this for over 2,000 years. Facing discrimination and violence across Europe, voices in the late 19th century grew louder: "We can't wait any longer. Let's build our own nation." This was the birth of the Zionist movement.</p>
+      <div class="key-point anim">
+        <p><strong>Key takeaway:</strong> Zionism isn't simply about wanting land. It was born from a desperate need for safety after centuries of <span class="term" data-tip-ja="特定の集団に対する憎悪や差別" data-tip-en="Hatred or discrimination against a specific group, called 'antisemitism' when directed at Jewish people">persecution</span>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="standard">
+    <div class="content-body lang-ja visible">
+      <h3>19世紀ヨーロッパの危機</h3>
+      <p>シオニズムを理解するには、19世紀ヨーロッパの状況を知る必要があります。二つの大きな力がぶつかり合っていました。一つは<span class="term" data-tip-ja="国民が共通の文化・言語・歴史を基盤に自らの国家を形成すべきだという思想" data-tip-en="The idea that a people sharing common culture, language, and history should form their own nation-state">ナショナリズム</span>の台頭、もう一つは根強い<span class="term" data-tip-ja="ユダヤ人に対する偏見・差別・迫害の総称" data-tip-en="Prejudice, discrimination, and persecution directed against Jewish people">反ユダヤ主義</span>です。</p>
+      <p>ヨーロッパ各地でイタリア人、ドイツ人が「自分たちの国」を作っていく中、ユダヤ人にはそれが許されませんでした。1894年、フランスでユダヤ系軍人<span class="term" data-tip-ja="アルフレド・ドレフュス。スパイ容疑で不当に有罪とされた" data-tip-en="Alfred Dreyfus, a Jewish French officer falsely convicted of treason">ドレフュス</span>がスパイの冤罪で逮捕されます。</p>
+      <div class="highlight-box anim">
+        <div class="box-title">ドレフュス事件の衝撃</div>
+        <p>「自由・平等・博愛」を掲げるフランスでさえ、ユダヤ人は安全ではなかった。この事件を取材したテオドール・ヘルツルは衝撃を受け、1896年に『ユダヤ人国家』を出版。政治的シオニズムが本格的に始まります。</p>
+      </div>
+      <h3>ヘルツルのビジョン</h3>
+      <p>テオドール・ヘルツル（1860-1904）はオーストリア＝ハンガリー出身のジャーナリストでした。彼は「ユダヤ人問題」の解決策は同化ではなく、独自の国家建設にあると主張しました。1897年にバーゼルで第一回シオニスト会議を開催し、組織的な運動の基盤を築きました。</p>
+      <div class="key-point anim">
+        <p><strong>重要な区別：</strong>ヘルツルのシオニズムは「世俗的・政治的」なものでした。宗教的な理由からではなく、反ユダヤ主義への現実的な解決策として国家建設を提唱したのです。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>19th-Century Europe in Crisis</h3>
+      <p>To understand Zionism, you need to know the situation in 19th-century Europe. Two great forces were colliding: the rise of <span class="term" data-tip-ja="国民が共通の文化・言語・歴史を基盤に自らの国家を形成すべきだという思想" data-tip-en="The idea that a people sharing common culture, language, and history should form their own nation-state">nationalism</span> and deep-rooted <span class="term" data-tip-ja="ユダヤ人に対する偏見・差別・迫害の総称" data-tip-en="Prejudice, discrimination, and persecution directed against Jewish people">antisemitism</span>.</p>
+      <p>Across Europe, Italians and Germans were building "their own nations," but Jewish people were denied the same right. In 1894, <span class="term" data-tip-ja="アルフレド・ドレフュス。冤罪事件の主人公" data-tip-en="Alfred Dreyfus, a Jewish French officer falsely convicted of treason">Dreyfus</span>, a Jewish French officer, was falsely arrested on espionage charges.</p>
+      <div class="highlight-box anim">
+        <div class="box-title">The Shock of the Dreyfus Affair</div>
+        <p>Even in France, the land of "liberty, equality, fraternity," Jewish people were not safe. Journalist Theodor Herzl, covering the trial, was profoundly shaken. In 1896 he published <em>Der Judenstaat</em>, launching political Zionism.</p>
+      </div>
+      <h3>Herzl's Vision</h3>
+      <p>Theodor Herzl (1860-1904) was an Austro-Hungarian journalist who argued that the solution was not assimilation but a sovereign state. In 1897, he convened the First Zionist Congress in Basel, laying the movement's organizational foundation.</p>
+      <div class="key-point anim">
+        <p><strong>A crucial distinction:</strong> Herzl's Zionism was secular and political. He advocated statehood not for religious reasons, but as a practical solution to antisemitism.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="expert">
+    <div class="content-body lang-ja visible">
+      <h3>シオニズムの思想的多様性</h3>
+      <p>「シオニズム」を一枚岩として語ることはできません。複数の競合する潮流が存在しました。</p>
+      <h4>政治的シオニズム（ヘルツル派）</h4>
+      <p>国際的な法的承認を得て国家を建設することを最優先としました。ヘルツルはパレスチナに固執せず、アルゼンチンやウガンダも候補地として検討しています。</p>
+      <h4>文化的シオニズム（アハド・ハアム派）</h4>
+      <p><span class="term" data-tip-ja="アシェル・ギンツベルク（1856-1927）。ペンネーム「アハド・ハアム」で知られる思想家" data-tip-en="Asher Ginzberg (1856-1927), thinker known as Ahad Ha'am ('One of the People')">アハド・ハアム</span>は、物理的な国家よりも精神的・文化的中心地の建設を重視しました。ユダヤ文化のルネサンスこそが先決だと主張。</p>
+      <h4>労働シオニズム</h4>
+      <p>社会主義思想と結合した潮流。<span class="term" data-tip-ja="イスラエル建国の父ダヴィド・ベン＝グリオン（1886-1973）" data-tip-en="David Ben-Gurion (1886-1973), founding father of Israel">ベン＝グリオン</span>らが主導し、キブツ運動と結びつきました。建国後のイスラエルを数十年にわたり支配した思想です。</p>
+      <h4>修正主義シオニズム</h4>
+      <p><span class="term" data-tip-ja="ゼエヴ・ジャボティンスキー（1880-1940）。より強硬な民族主義的シオニズムを主張" data-tip-en="Ze'ev Jabotinsky (1880-1940), advocate of militant nationalist Zionism">ジャボティンスキー</span>が率いた右派潮流。「大イスラエル」を主張し、現代リクード党の思想的源流となりました。</p>
+      <div class="key-point anim">
+        <p><strong>分析視座：</strong>シオニズム内部のこれらの対立は今日のイスラエル国内政治にも直結しています。「シオニズム＝一つの考え方」という前提自体が、議論を不毛にする最大の原因の一つです。</p>
+      </div>
+      <h3>反シオニズムの系譜</h3>
+      <p>シオニズムはユダヤ人社会内部でも当初から反対に遭いました。正統派は「メシア到来前の国家建設は神への冒涜」と見なし、同化ユダヤ人は忠誠心への疑惑を懸念、社会主義者は「民族主義は階級闘争の敵」と批判しました。</p>
+    </div>
+    <div class="content-body lang-en">
+      <h3>The Ideological Diversity of Zionism</h3>
+      <p>Zionism cannot be treated as a monolith. Several competing currents coexisted.</p>
+      <h4>Political Zionism (Herzlian)</h4>
+      <p>Prioritized state-building with international legal recognition. Herzl did not insist on Palestine; Argentina and Uganda were also considered.</p>
+      <h4>Cultural Zionism (Ahad Ha'am)</h4>
+      <p><span class="term" data-tip-ja="アシェル・ギンツベルク（1856-1927）" data-tip-en="Asher Ginzberg (1856-1927), known as Ahad Ha'am">Ahad Ha'am</span> prioritized a spiritual and cultural center over a physical state, arguing that a cultural renaissance had to come first.</p>
+      <h4>Labor Zionism</h4>
+      <p>Fused with socialist thought, led by <span class="term" data-tip-ja="ダヴィド・ベン＝グリオン" data-tip-en="David Ben-Gurion (1886-1973), founding father of Israel">Ben-Gurion</span> and linked to the kibbutz movement. Dominated Israel for decades.</p>
+      <h4>Revisionist Zionism</h4>
+      <p>A right-wing current led by <span class="term" data-tip-ja="ゼエヴ・ジャボティンスキー" data-tip-en="Ze'ev Jabotinsky (1880-1940), militant nationalist Zionist">Jabotinsky</span>, demanding "Greater Israel." The ideological ancestor of today's Likud party.</p>
+      <div class="key-point anim">
+        <p><strong>Analytical lens:</strong> These internal conflicts map directly onto Israeli politics today. The assumption that "Zionism = one idea" is one of the biggest barriers to productive debate.</p>
+      </div>
+      <h3>The Genealogy of Anti-Zionism</h3>
+      <p>Zionism faced fierce internal opposition. Orthodox Jews viewed pre-Messianic statehood as blasphemy; assimilated Jews feared loyalty questions; socialists saw nationalism as the enemy of class struggle.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Section 2 -->
+<section class="section" id="s2">
+<div class="section-inner">
+  <div class="section-num anim">02</div>
+  <h2 class="anim">
+    <span class="lang-ja visible">聖書の「約束の地」</span>
+    <span class="lang-en">The "Promised Land" in the Bible</span>
+    <span class="en-sub lang-ja visible">The Promised Land</span>
+    <span class="en-sub lang-en">Biblical Foundations</span>
+  </h2>
+  <p class="section-lead anim">
+    <span class="lang-ja visible">シオニズムの根底には、数千年前の聖書の物語がある。「神がこの土地をあなたたちに与える」という約束は、どう解釈されてきたのか。</span>
+    <span class="lang-en">At the root of Zionism lies a biblical narrative thousands of years old. How has the promise been interpreted?</span>
+  </p>
+
+  <div class="depth-content visible" data-depth="intro">
+    <div class="content-body lang-ja visible">
+      <h3>「約束」の物語</h3>
+      <p>聖書（旧約聖書）の中に、こんな物語があります。神がアブラハムという人物に語りかけます。「あなたの故郷を離れなさい。わたしがあなたに示す土地へ行きなさい。わたしはあなたを大いなる国民とする。」</p>
+      <p>この「神との約束」が、ユダヤ人と特定の土地（現在のイスラエル・パレスチナ地域）を結びつける根本的な物語です。</p>
+      <div class="highlight-box anim">
+        <div class="box-title">わかりやすく言うと</div>
+        <p>家族が代々持っている「土地の権利書」のようなものだと考えてください。ただし、その権利書は法律文書ではなく、宗教的な聖典に書かれています。この「権利書」の正当性をどう考えるかが、今日の議論の核心です。</p>
+      </div>
+      <h3>なぜこれが重要なのか</h3>
+      <p>この物語が重要なのは、ユダヤ人だけでなく<strong>キリスト教徒にとっても</strong>聖書は聖典だからです。特にアメリカの一部のキリスト教徒は、この約束を「今も有効な神の計画」として信じています。これが後の章でアメリカ政治につながります。</p>
+    </div>
+    <div class="content-body lang-en">
+      <h3>The Story of the "Promise"</h3>
+      <p>In the Bible, God speaks to Abraham: "Leave your homeland. Go to the land I will show you. I will make you a great nation."</p>
+      <p>This "covenant with God" is the foundational narrative connecting Jewish people to a specific territory.</p>
+      <div class="highlight-box anim">
+        <div class="box-title">A simple analogy</div>
+        <p>Think of it as a family "title deed" passed down through generations. But instead of a legal document, this deed is written in a religious scripture. How you view its legitimacy is at the heart of today's debate.</p>
+      </div>
+      <h3>Why does this matter?</h3>
+      <p>This narrative matters because the Bible is sacred not only to Jewish people but <strong>to Christians as well</strong>. Some American Christians believe this promise is "God's plan, still in effect today." This is what connects to American politics in later chapters.</p>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="standard">
+    <div class="content-body lang-ja visible">
+      <h3>アブラハム契約の構造</h3>
+      <p>創世記には、神とアブラハムの間の<span class="term" data-tip-ja="ベリート（ヘブライ語）。神と人間の間の厳粛な取り決め" data-tip-en="Brit (Hebrew): A solemn agreement between God and humans">契約（ベリート）</span>が記されています。</p>
+      <div class="timeline anim">
+        <div class="timeline-item"><div class="timeline-date">創世記 12章</div><div class="timeline-text">神がアブラハムに「わたしが示す地に行け」と命じ、「大いなる国民にする」と約束。</div></div>
+        <div class="timeline-item"><div class="timeline-date">創世記 15章</div><div class="timeline-text">「この地をあなたの子孫に与える」という土地の約束が明示される。</div></div>
+        <div class="timeline-item"><div class="timeline-date">創世記 17章</div><div class="timeline-text">契約が「永遠の契約」として更新。カナンの全地が「永遠の所有」と記される。</div></div>
+      </div>
+      <h3>出エジプトと帰還のパターン</h3>
+      <p>アブラハムの子孫はエジプトで奴隷となりますが、モーセに率いられてエジプトを脱出。40年間の荒野放浪の後、カナンの地に入ります。この「離散→帰還」のパターンがユダヤ人のアイデンティティの核心に刻み込まれました。</p>
+      <div class="key-point anim">
+        <p><strong>注意：</strong>歴史学ではこれらの物語の事実性について議論があります。重要なのは「事実かどうか」より、「この物語がどのように信じられ、政治的に機能してきたか」です。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>The Structure of the Abrahamic Covenant</h3>
+      <p>Genesis records a <span class="term" data-tip-ja="ベリート：神と人間の間の取り決め" data-tip-en="Brit (Hebrew): A solemn agreement between God and humans">covenant (brit)</span> between God and Abraham.</p>
+      <div class="timeline anim">
+        <div class="timeline-item"><div class="timeline-date">Genesis 12</div><div class="timeline-text">God commands Abraham to "go to the land I will show you" and promises a "great nation."</div></div>
+        <div class="timeline-item"><div class="timeline-date">Genesis 15</div><div class="timeline-text">The land promise is made explicit: "To your offspring I give this land."</div></div>
+        <div class="timeline-item"><div class="timeline-date">Genesis 17</div><div class="timeline-text">The covenant is renewed as "everlasting." Canaan becomes an "everlasting possession."</div></div>
+      </div>
+      <h3>Exodus and the Pattern of Return</h3>
+      <p>Abraham's descendants become slaves in Egypt but are led out by Moses. After 40 years in the wilderness, they enter Canaan. This "diaspora → return" pattern became etched into Jewish identity.</p>
+      <div class="key-point anim">
+        <p><strong>Note:</strong> The historical accuracy of these narratives is debated. What matters is not "whether it happened" but how this story has been believed and has functioned politically.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="expert">
+    <div class="content-body lang-ja visible">
+      <h3>聖書解釈学と「約束の地」</h3>
+      <p>「約束の地」をめぐる神学的解釈は、ユダヤ教とキリスト教で大きく異なります。</p>
+      <h4>ユダヤ教内部の解釈</h4>
+      <p><strong>正統派</strong>の多くは土地の約束を文字通りに受け取りますが、メシア到来まで人間の手で実現すべきでないとする立場（ハレーディーム反シオニズム）と、人間の行動で実現を早めるべきとする立場（宗教的シオニズム）に分かれます。ラビ・クック（1865-1935）は後者の代表で、世俗的シオニストの活動さえ「無意識のうちに神の計画を実現している」と解釈しました。</p>
+      <h4>キリスト教の解釈分岐</h4>
+      <p><strong>置換神学：</strong>教会が「新しいイスラエル」として旧約の約束を継承したとする伝統的解釈。土地の約束は霊的に成就済みとなります。カトリックと主流プロテスタントの立場。</p>
+      <p><strong>ディスペンセーション主義：</strong>神の計画を複数の「経綸」に分け、イスラエルと教会を区別する解釈。土地の約束は今も有効であり、現代のイスラエル建国は預言の成就とみなされます。第4章で詳述するキリスト教シオニズムの神学的基盤です。</p>
+      <div class="key-point anim">
+        <p><strong>批判的視座：</strong>ポストコロニアル聖書学では、「約束の地」ナラティブ自体が「入植者植民地主義」の論理を内包しているとの批判があります。ロバート・アレン・ウォリアーは、出エジプト記の「カナン人」の抹消がアメリカ先住民の経験と構造的に相似していると指摘しました。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>Biblical Hermeneutics and the "Promised Land"</h3>
+      <p>Theological interpretations differ dramatically between Judaism and Christianity.</p>
+      <h4>Within Judaism</h4>
+      <p><strong>Orthodox</strong> Jews generally take the land promise literally, but divide between those who believe humans should not realize it before the Messiah (Haredi anti-Zionism) and those who believe human action can hasten fulfillment (Religious Zionism). Rabbi Kook (1865-1935) interpreted even secular Zionists as "unconsciously fulfilling God's plan."</p>
+      <h4>Christian Interpretive Divergence</h4>
+      <p><strong>Supersessionism:</strong> The traditional view that the Church inherited Old Testament promises as the "New Israel." The land promise is spiritually fulfilled. The Catholic and mainline Protestant position.</p>
+      <p><strong>Dispensationalism:</strong> Divides God's plan into "dispensations," distinguishing Israel from the Church. The land promise remains literally valid; modern Israel is prophetic fulfillment. This is the theological basis for Christian Zionism, detailed in Chapter 4.</p>
+      <div class="key-point anim">
+        <p><strong>Critical lens:</strong> Postcolonial scholarship critiques the "Promised Land" narrative as embedding settler-colonial logic. Robert Allen Warrior noted parallels between the erasure of "Canaanites" in Exodus and the experience of Native Americans.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Section 3 -->
+<section class="section" id="s3">
+<div class="section-inner">
+  <div class="section-num anim">03</div>
+  <h2 class="anim"><span class="lang-ja visible">近代シオニズムの誕生</span><span class="lang-en">Birth of Modern Zionism</span><span class="en-sub lang-ja visible">From Diaspora to Statehood</span><span class="en-sub lang-en">From Diaspora to Statehood</span></h2>
+  <p class="section-lead anim"><span class="lang-ja visible">ヘルツルの夢から半世紀。二つの世界大戦、ホロコースト、そして建国へ。</span><span class="lang-en">Half a century from Herzl's dream. Two World Wars, the Holocaust, and the birth of a state.</span></p>
+
+  <div class="depth-content visible" data-depth="intro">
+    <div class="content-body lang-ja visible">
+      <h3>夢が現実になるまで</h3>
+      <p>ヘルツルが「ユダヤ人の国を作ろう」と呼びかけてから、実際にイスラエルが建国されるまでには約50年かかりました。その間に、人類史上最悪の悲劇が起こります。</p>
+      <div class="highlight-box anim">
+        <div class="box-title">ホロコーストとシオニズム</div>
+        <p>第二次世界大戦中、ナチス・ドイツによって約600万人のユダヤ人が殺害されました（ホロコースト）。この悲劇は「ユダヤ人には自分たちの国が必要だ」という主張に、圧倒的な説得力を与えました。</p>
+      </div>
+      <h3>イスラエル建国（1948年）</h3>
+      <p>1948年5月14日、ダヴィド・ベン＝グリオンがイスラエルの独立を宣言しました。2000年以上の離散を経て、ユダヤ人は再び自分たちの国を持ちました。しかし同時に、その土地に住んでいたアラブ人（パレスチナ人）にとっては「ナクバ（大災厄）」の始まりでもありました。</p>
+      <div class="key-point anim">
+        <p><strong>覚えておきたいポイント：</strong>イスラエルの建国は、ある人々にとっての「夢の実現」が別の人々にとっての「悲劇の始まり」でもあったという、二重の現実を持っています。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>From Dream to Reality</h3>
+      <p>It took about 50 years from Herzl's call to the actual founding of Israel. In between, the worst tragedy in human history occurred.</p>
+      <div class="highlight-box anim">
+        <div class="box-title">The Holocaust and Zionism</div>
+        <p>During World War II, approximately 6 million Jewish people were murdered by Nazi Germany (the Holocaust). This tragedy gave overwhelming force to the argument that Jewish people needed their own state.</p>
+      </div>
+      <h3>The Founding of Israel (1948)</h3>
+      <p>On May 14, 1948, David Ben-Gurion declared Israeli independence. After over 2,000 years of diaspora, Jewish people once again had their own nation. But simultaneously, for the Arabs living there (Palestinians), it was the beginning of the "Nakba" (catastrophe).</p>
+      <div class="key-point anim">
+        <p><strong>Key takeaway:</strong> Israel's founding carried a dual reality: one people's "dream fulfilled" was another people's "tragedy begun."</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="standard">
+    <div class="content-body lang-ja visible">
+      <h3>バルフォア宣言から委任統治へ</h3>
+      <div class="timeline anim">
+        <div class="timeline-item"><div class="timeline-date">1917年</div><div class="timeline-text"><span class="term" data-tip-ja="英国外相バルフォアがユダヤ人の「民族的故郷」建設を支持する書簡を発表" data-tip-en="British Foreign Secretary Balfour's letter supporting a Jewish 'national home'">バルフォア宣言</span>：英国がパレスチナにおけるユダヤ人の「民族的故郷」建設を支持。</div></div>
+        <div class="timeline-item"><div class="timeline-date">1920年</div><div class="timeline-text">英国がパレスチナの委任統治を開始。ユダヤ人の移民が加速。</div></div>
+        <div class="timeline-item"><div class="timeline-date">1930年代</div><div class="timeline-text">ナチスの台頭でヨーロッパからの移民が急増。アラブ人との衝突が激化。</div></div>
+        <div class="timeline-item"><div class="timeline-date">1939年</div><div class="timeline-text">英国が白書でユダヤ人移民を制限。まさにホロコーストの直前。</div></div>
+        <div class="timeline-item"><div class="timeline-date">1945年</div><div class="timeline-text">ホロコースト後、生存者の行き場がなく、パレスチナへの圧力が最高潮に。</div></div>
+        <div class="timeline-item"><div class="timeline-date">1947年</div><div class="timeline-text">国連がパレスチナ分割決議（決議181号）を採択。ユダヤ人は受諾、アラブ側は拒否。</div></div>
+        <div class="timeline-item"><div class="timeline-date">1948年</div><div class="timeline-text">イスラエル建国宣言。翌日、周辺アラブ諸国が侵攻（第一次中東戦争）。</div></div>
+      </div>
+      <div class="key-point anim">
+        <p><strong>構造的理解：</strong>バルフォア宣言は英国の戦時外交の産物であり、同じ土地についてアラブ人にも矛盾する約束をしていました。この「二枚舌外交」が、今日に至る紛争の構造的原因の一つです。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>From Balfour Declaration to the Mandate</h3>
+      <div class="timeline anim">
+        <div class="timeline-item"><div class="timeline-date">1917</div><div class="timeline-text"><span class="term" data-tip-ja="英国外相バルフォアの書簡" data-tip-en="British Foreign Secretary Balfour's letter supporting a Jewish 'national home'">Balfour Declaration</span>: Britain supports a Jewish "national home" in Palestine.</div></div>
+        <div class="timeline-item"><div class="timeline-date">1920</div><div class="timeline-text">Britain begins its Mandate over Palestine. Jewish immigration accelerates.</div></div>
+        <div class="timeline-item"><div class="timeline-date">1930s</div><div class="timeline-text">Nazi rise drives a surge of European immigrants. Clashes with Arabs intensify.</div></div>
+        <div class="timeline-item"><div class="timeline-date">1939</div><div class="timeline-text">Britain's White Paper restricts Jewish immigration — just before the Holocaust.</div></div>
+        <div class="timeline-item"><div class="timeline-date">1945</div><div class="timeline-text">After the Holocaust, survivors have nowhere to go. Pressure on Palestine peaks.</div></div>
+        <div class="timeline-item"><div class="timeline-date">1947</div><div class="timeline-text">UN adopts the Partition Plan (Resolution 181). Jews accept; Arabs reject.</div></div>
+        <div class="timeline-item"><div class="timeline-date">1948</div><div class="timeline-text">Israel declares independence. Neighboring Arab states invade (First Arab-Israeli War).</div></div>
+      </div>
+      <div class="key-point anim">
+        <p><strong>Structural insight:</strong> The Balfour Declaration was a product of wartime diplomacy; Britain made contradictory promises to Arabs about the same land. This "double dealing" is a structural root of today's conflict.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="expert">
+    <div class="content-body lang-ja visible">
+      <h3>シオニズムと植民地主義の交差</h3>
+      <p>近代シオニズムの成立過程は、ヨーロッパ植民地主義の時代と不可分です。ヘルツルはオスマン帝国のスルタンや英国の植民地大臣チェンバレンと交渉し、ユダヤ人入植地の「勅許」を得ようとしました。この手法自体が、当時の帝国主義的な枠組みの中で行われていたことは見過ごせません。</p>
+      <h4>イシューブの社会構造</h4>
+      <p>パレスチナにおけるユダヤ人入植社会（<span class="term" data-tip-ja="パレスチナにおけるユダヤ人共同体。「定住地」の意" data-tip-en="The Jewish community in Palestine before 1948; means 'settlement'">イシューブ</span>）は、アラブ人労働者を排除する「ヘブライ労働」政策を採用しました。これは労働シオニズムの「自立した社会建設」という理想の一環でしたが、同時にアパルトヘイト的な分離構造を内包していました。</p>
+      <h4>ホロコーストの政治的利用をめぐる論争</h4>
+      <p>イスラエルの歴史家トム・セゲヴは、シオニスト指導部がホロコースト期に「救出よりも建国」を優先した側面があると指摘しています。また哲学者ハンナ・アーレントは、シオニズムが「反ユダヤ主義」と共依存的な関係にあることを早期に批判しました。</p>
+      <div class="key-point anim">
+        <p><strong>学術的論点：</strong>「シオニズムは植民地主義か」という問いに対して、パレスチナの歴史家ラシード・ハーリディーは「入植者植民地主義」の枠組みで分析し、イスラエルの歴史家ベニー・モリスは「民族浄化」の側面を認めつつもヨーロッパ植民地主義との差異を強調しています。この論争は現在も学術界で続いています。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>Zionism at the Intersection of Colonialism</h3>
+      <p>The formation of modern Zionism is inseparable from the age of European colonialism. Herzl negotiated with the Ottoman Sultan and British Colonial Secretary Chamberlain for a "charter" for Jewish settlement. This approach operated within an imperialist framework.</p>
+      <h4>Social Structure of the Yishuv</h4>
+      <p>The Jewish settler community in Palestine (the <span class="term" data-tip-ja="パレスチナのユダヤ人共同体" data-tip-en="The Jewish community in Palestine before 1948">Yishuv</span>) adopted a "Hebrew Labor" policy excluding Arab workers. While part of Labor Zionism's ideal of self-sufficient society-building, it simultaneously embedded apartheid-like separation structures.</p>
+      <h4>The Controversy Over Political Uses of the Holocaust</h4>
+      <p>Israeli historian Tom Segev has argued that Zionist leadership at times prioritized statehood over rescue during the Holocaust. Philosopher Hannah Arendt critiqued the co-dependent relationship between Zionism and antisemitism early on.</p>
+      <div class="key-point anim">
+        <p><strong>Academic debate:</strong> On whether "Zionism is colonialism," Palestinian historian Rashid Khalidi analyzes through a "settler-colonial" framework, while Israeli historian Benny Morris acknowledges "ethnic cleansing" aspects but emphasizes differences from European colonialism. This debate continues in academia.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Section 4 -->
+<section class="section" id="s4">
+<div class="section-inner">
+  <div class="section-num anim">04</div>
+  <h2 class="anim"><span class="lang-ja visible">キリスト教シオニズムの誕生</span><span class="lang-en">The Birth of Christian Zionism</span><span class="en-sub lang-ja visible">Why Christians Support Israel</span><span class="en-sub lang-en">Theological Roots</span></h2>
+  <p class="section-lead anim"><span class="lang-ja visible">ユダヤ人の運動であるはずのシオニズムを、なぜキリスト教徒が熱烈に支持するのか。その答えは19世紀の神学革命にある。</span><span class="lang-en">Why do Christians fervently support what should be a Jewish movement? The answer lies in a 19th-century theological revolution.</span></p>
+
+  <div class="depth-content visible" data-depth="intro">
+    <div class="content-body lang-ja visible">
+      <h3>意外な応援団</h3>
+      <p>「シオニズムはユダヤ人の運動」と聞いて、驚くかもしれませんが、実はイスラエルを最も熱心に応援しているのは、ある種のキリスト教徒たちです。特にアメリカの<span class="term" data-tip-ja="聖書を文字通りに信じ、個人的な信仰体験を重視するプロテスタントの一派" data-tip-en="A branch of Protestantism emphasizing literal Bible belief and personal faith experience">福音派</span>キリスト教徒は、イスラエル支持においてユダヤ人以上に熱心なことさえあります。</p>
+      <div class="highlight-box anim">
+        <div class="box-title">なぜキリスト教徒がイスラエルを応援するのか？</div>
+        <p>一部のキリスト教徒は、聖書の預言を文字通りに信じています。その預言によれば、イエス・キリストが再び地上に来る（再臨）前に、ユダヤ人がイスラエルの地に帰還しなければなりません。つまり、イスラエルの存在は「神の計画の一部」なのです。</p>
+      </div>
+      <h3>「終末」への道筋</h3>
+      <p>この考え方では、世界の歴史は神が定めたシナリオに沿って進んでおり、イスラエルの建国はそのクライマックスに向けた重要なステップです。だからイスラエルを支持することは、単なる政治的選択ではなく、<strong>宗教的義務</strong>なのです。</p>
+      <div class="key-point anim">
+        <p><strong>覚えておきたいポイント：</strong>キリスト教シオニズムは「ユダヤ人が好きだから」ではなく、「聖書の預言が実現するために必要だから」という神学的な理由でイスラエルを支持しています。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>An Unexpected Cheering Section</h3>
+      <p>You might be surprised to learn that some of Israel's most ardent supporters are not Jewish but Christian. American <span class="term" data-tip-ja="聖書を文字通りに信じるプロテスタントの一派" data-tip-en="A branch of Protestantism emphasizing literal Bible belief and personal faith">evangelicals</span> can be even more passionate about Israel than many Jewish people.</p>
+      <div class="highlight-box anim">
+        <div class="box-title">Why do Christians support Israel?</div>
+        <p>Some Christians believe biblical prophecy literally. According to these prophecies, Jewish people must return to Israel before Jesus Christ comes again (the Second Coming). Israel's existence is thus "part of God's plan."</p>
+      </div>
+      <h3>The Road to the "End Times"</h3>
+      <p>In this worldview, history follows a God-ordained script, and Israel's founding is a crucial step toward the climax. Supporting Israel is not just politics — it is a <strong>religious duty</strong>.</p>
+      <div class="key-point anim">
+        <p><strong>Key takeaway:</strong> Christian Zionism supports Israel not because of affection for Jewish people, but because of a theological conviction that Israel is necessary for biblical prophecy to be fulfilled.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="standard">
+    <div class="content-body lang-ja visible">
+      <h3>ディスペンセーション主義とは</h3>
+      <p>キリスト教シオニズムの神学的基盤は<span class="term" data-tip-ja="神の歴史計画を複数の「経綸（時代区分）」に分けて理解する神学体系。19世紀にダービーが体系化" data-tip-en="A theological system dividing God's plan into multiple 'dispensations' (ages). Systematized by Darby in the 19th century">ディスペンセーション主義</span>と呼ばれる神学体系です。</p>
+      <p>この考え方は、英国の牧師ジョン・ネルソン・ダービー（1800-1882）によって19世紀に体系化されました。核心は以下の点です：</p>
+      <ul>
+        <li>神の歴史計画は複数の「時代（ディスペンセーション）」に分かれている</li>
+        <li>イスラエル（ユダヤ人）と教会（キリスト教徒）は、神の計画の中で<strong>別々の役割</strong>を持つ</li>
+        <li>旧約聖書のイスラエルへの約束は、教会に「転用」されたのではなく、今も有効である</li>
+        <li>終末時代にユダヤ人はイスラエルに帰還し、キリストが再臨する</li>
+      </ul>
+      <div class="highlight-box anim">
+        <div class="box-title">スコフィールド参照聖書の影響</div>
+        <p>1909年に出版されたスコフィールド参照聖書は、聖書本文の横にディスペンセーション主義の注釈をつけたものです。この聖書はアメリカで何百万部も売れ、聖書の読み方そのものを変えてしまいました。多くの信者にとって、注釈と聖書本文の区別が曖昧になりました。</p>
+      </div>
+      <h3>前千年王国論</h3>
+      <p><span class="term" data-tip-ja="キリストが再臨して千年間地上を統治するという終末論。再臨が千年王国の「前」に来るので前千年王国論" data-tip-en="The belief that Christ will return before a literal 1,000-year reign on earth">前千年王国論</span>は、キリストが再臨して文字通り千年間地上を統治するという終末論です。この教義では、イスラエルの建国と中東の紛争は「終末の兆候」として歓迎されさえします。</p>
+    </div>
+    <div class="content-body lang-en">
+      <h3>What is Dispensationalism?</h3>
+      <p>The theological foundation of Christian Zionism is a system called <span class="term" data-tip-ja="神の計画を複数の時代に分ける神学体系" data-tip-en="A theological system dividing God's plan into 'dispensations,' systematized by Darby">dispensationalism</span>.</p>
+      <p>Systematized by British pastor John Nelson Darby (1800-1882), its core tenets are:</p>
+      <ul>
+        <li>God's historical plan is divided into multiple "dispensations" (ages)</li>
+        <li>Israel (Jewish people) and the Church (Christians) have <strong>separate roles</strong> in God's plan</li>
+        <li>Old Testament promises to Israel were not "transferred" to the Church — they remain valid</li>
+        <li>In the end times, Jewish people will return to Israel and Christ will come again</li>
+      </ul>
+      <div class="highlight-box anim">
+        <div class="box-title">The Scofield Reference Bible</div>
+        <p>Published in 1909, the Scofield Reference Bible placed dispensationalist commentary alongside the biblical text. Selling millions of copies in America, it changed how people read the Bible. For many believers, the line between commentary and scripture blurred.</p>
+      </div>
+      <h3>Premillennialism</h3>
+      <p><span class="term" data-tip-ja="キリストが再臨して千年間統治するという終末論" data-tip-en="The belief that Christ will return before a literal 1,000-year reign on earth">Premillennialism</span> holds that Christ will return and literally reign on earth for a thousand years. Under this doctrine, Israel's founding and Middle East conflict are even welcomed as "signs of the end times."</p>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="expert">
+    <div class="content-body lang-ja visible">
+      <h3>キリスト教シオニズムの神学的系譜</h3>
+      <p>キリスト教シオニズムは、しばしば近代的な現象と見なされますが、その根はより深いところにあります。</p>
+      <h4>宗教改革と聖書リテラリズム</h4>
+      <p>16世紀の宗教改革は「聖書のみ」（Sola Scriptura）を掲げ、カトリック教会の寓意的解釈から離れて文字通りの聖書解釈を重視しました。この転換が、旧約聖書のイスラエルへの約束を文字通りに読む土壌を作りました。</p>
+      <h4>17世紀ピューリタニズム</h4>
+      <p>英国のピューリタンたちは、ユダヤ人のパレスチナ帰還を聖書預言の成就として期待しました。1649年にはオランダのピューリタンがイングランド・スコットランド政府に対しユダヤ人のパレスチナ帰還を助けるよう請願しています。これはヘルツルの250年も前のことです。</p>
+      <h4>ダービーからスコフィールドへ</h4>
+      <p>ダービーの<span class="term" data-tip-ja="キリスト教徒が終末の患難の前に天に引き上げられるという教義" data-tip-en="The doctrine that Christians will be 'caught up' to heaven before the end-times tribulation">携挙（ラプチャー）</span>の教義は、終末論に緊急性を加えました。信者は「いつ携挙が起きてもおかしくない」と感じ、イスラエルの動向が預言のタイムラインのどこに位置するかに強い関心を持つようになりました。</p>
+      <div class="key-point anim">
+        <p><strong>批判的分析：</strong>多くの神学者は、ディスペンセーション主義が聖書の文脈を無視した「読み込み（eisegesis）」であると批判しています。また、キリスト教シオニズムにはパラドックスがあります。その終末論のシナリオでは、最終的にユダヤ人はキリストを受け入れるか滅びるかの選択を迫られます。「ユダヤ人のために」と言いながら、その思想の論理的帰結はユダヤ人のアイデンティティの否定なのです。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>Theological Genealogy of Christian Zionism</h3>
+      <p>Christian Zionism is often treated as a modern phenomenon, but its roots run deeper.</p>
+      <h4>The Reformation and Biblical Literalism</h4>
+      <p>The 16th-century Reformation championed "Scripture Alone" (Sola Scriptura), shifting from Catholic allegorical interpretation toward literal reading. This laid the groundwork for taking Old Testament promises to Israel at face value.</p>
+      <h4>17th-Century Puritanism</h4>
+      <p>English Puritans expected Jewish return to Palestine as prophetic fulfillment. In 1649, Dutch Puritans petitioned the English and Scottish governments to help Jews return to Palestine — 250 years before Herzl.</p>
+      <h4>From Darby to Scofield</h4>
+      <p>Darby's doctrine of the <span class="term" data-tip-ja="キリスト教徒が天に引き上げられる教義" data-tip-en="The doctrine that Christians will be 'caught up' to heaven before tribulation">Rapture</span> added urgency to eschatology. Believers felt the Rapture could happen at any moment, intensifying interest in where Israel fits on the prophetic timeline.</p>
+      <div class="key-point anim">
+        <p><strong>Critical analysis:</strong> Many theologians criticize dispensationalism as "eisegesis" (reading meaning into the text) that ignores biblical context. Christian Zionism also contains a paradox: its eschatological scenario ultimately demands that Jews either accept Christ or perish. Despite claiming to be "for the Jewish people," its logical conclusion is the denial of Jewish identity.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Section 5 -->
+<section class="section" id="s5">
+<div class="section-inner">
+  <div class="section-num anim">05</div>
+  <h2 class="anim"><span class="lang-ja visible">アメリカ福音派とイスラエル</span><span class="lang-en">American Evangelicals and Israel</span><span class="en-sub lang-ja visible">The Holy Alliance</span><span class="en-sub lang-en">The Holy Alliance</span></h2>
+  <p class="section-lead anim"><span class="lang-ja visible">神学が政治運動に変わるとき。アメリカ福音派がいかにしてイスラエル最大の応援団となったか。</span><span class="lang-en">When theology becomes political movement. How American evangelicals became Israel's greatest champions.</span></p>
+
+  <div class="depth-content visible" data-depth="intro">
+    <div class="content-body lang-ja visible">
+      <h3>アメリカの宗教地図</h3>
+      <p>アメリカは世界で最も宗教的な先進国の一つです。人口の約25%が<span class="term" data-tip-ja="プロテスタントの中でも、聖書の権威と個人的な回心体験を強調するグループ" data-tip-en="Protestants who emphasize biblical authority and personal conversion experience">福音派キリスト教徒</span>で、これは約8000万人に相当します。この巨大な宗教コミュニティが、アメリカの政治を大きく動かす力を持っています。</p>
+      <div class="highlight-box anim">
+        <div class="box-title">なぜ福音派はイスラエルを支持するのか</div>
+        <p>前の章で見たように、多くの福音派はイスラエルの存在を「聖書の預言の成就」と信じています。彼らにとって、イスラエルを支持することは「神の側に立つ」ことなのです。創世記12章3節の「あなたを祝福する者をわたしは祝福する」という言葉が、その根拠として頻繁に引用されます。</p>
+      </div>
+      <h3>信仰から政治へ</h3>
+      <p>1970年代以降、福音派は政治に積極的に関わるようになりました。彼らは選挙で巨大な票田となり、イスラエル支持を政策の最重要項目の一つに押し上げました。大統領候補者がイスラエルへの支持を表明することは、この票を獲得するために不可欠です。</p>
+    </div>
+    <div class="content-body lang-en">
+      <h3>America's Religious Map</h3>
+      <p>America is one of the most religious developed nations. About 25% of the population — roughly 80 million people — are <span class="term" data-tip-ja="聖書の権威と回心体験を強調するプロテスタント" data-tip-en="Protestants emphasizing biblical authority and personal conversion">evangelical Christians</span>. This massive community wields enormous political influence.</p>
+      <div class="highlight-box anim">
+        <div class="box-title">Why do evangelicals support Israel?</div>
+        <p>As we saw in the previous chapter, many evangelicals believe Israel's existence fulfills biblical prophecy. Supporting Israel means "standing with God." Genesis 12:3 — "I will bless those who bless you" — is frequently cited as justification.</p>
+      </div>
+      <h3>From Faith to Politics</h3>
+      <p>Since the 1970s, evangelicals have become politically active. They form a massive voting bloc, elevating Israel support to a top policy priority. Presidential candidates must express support for Israel to secure these votes.</p>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="standard">
+    <div class="content-body lang-ja visible">
+      <h3>福音派政治運動の歴史</h3>
+      <div class="timeline anim">
+        <div class="timeline-item"><div class="timeline-date">1948年</div><div class="timeline-text">イスラエル建国。多くの福音派が「預言の成就」として歓喜。</div></div>
+        <div class="timeline-item"><div class="timeline-date">1967年</div><div class="timeline-text">六日間戦争でイスラエルがエルサレム旧市街を占領。福音派にとって決定的な「預言的瞬間」に。</div></div>
+        <div class="timeline-item"><div class="timeline-date">1970年</div><div class="timeline-text">ハル・リンゼイ著『地球最後の日』が大ベストセラーに。終末論を大衆化。</div></div>
+        <div class="timeline-item"><div class="timeline-date">1979年</div><div class="timeline-text">ジェリー・ファルウェルが<span class="term" data-tip-ja="政治的保守主義とキリスト教的価値観を結合した運動組織" data-tip-en="Political organization combining conservatism with Christian values">モラル・マジョリティ</span>を設立。福音派が組織的な政治勢力に。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2006年</div><div class="timeline-text">ジョン・ハギー牧師が<span class="term" data-tip-ja="Christians United for Israel。アメリカ最大の親イスラエル組織で会員数は約700万人" data-tip-en="Christians United for Israel, the largest pro-Israel organization in America with ~7 million members">CUFI</span>を設立。アメリカ最大の親イスラエル組織に。</div></div>
+      </div>
+      <h3>選挙と福音派</h3>
+      <p>福音派白人の約80%が共和党に投票する傾向があります。この票田は大統領選挙の結果を左右するほどの規模を持ち、共和党候補者にとってイスラエル支持は絶対的な条件となっています。</p>
+      <div class="key-point anim">
+        <p><strong>重要な数字：</strong>CUFIの会員数は約700万人で、AIPAC（主にユダヤ系のロビー団体）の会員数の数十倍です。イスラエル支持の最大の推進力は、実はユダヤ系ではなくキリスト教福音派なのです。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>History of the Evangelical Political Movement</h3>
+      <div class="timeline anim">
+        <div class="timeline-item"><div class="timeline-date">1948</div><div class="timeline-text">Israel founded. Many evangelicals rejoice at "prophecy fulfilled."</div></div>
+        <div class="timeline-item"><div class="timeline-date">1967</div><div class="timeline-text">Six-Day War; Israel captures Old Jerusalem. A decisive "prophetic moment" for evangelicals.</div></div>
+        <div class="timeline-item"><div class="timeline-date">1970</div><div class="timeline-text">Hal Lindsey's <em>The Late Great Planet Earth</em> becomes a mega-bestseller, popularizing eschatology.</div></div>
+        <div class="timeline-item"><div class="timeline-date">1979</div><div class="timeline-text">Jerry Falwell founds the <span class="term" data-tip-ja="政治的保守主義とキリスト教的価値観を結合した組織" data-tip-en="Organization combining political conservatism with Christian values">Moral Majority</span>. Evangelicals become an organized political force.</div></div>
+        <div class="timeline-item"><div class="timeline-date">2006</div><div class="timeline-text">Pastor John Hagee founds <span class="term" data-tip-ja="アメリカ最大の親イスラエル組織" data-tip-en="Christians United for Israel, the largest pro-Israel org in America (~7 million members)">CUFI</span>, which becomes the largest pro-Israel organization in America.</div></div>
+      </div>
+      <h3>Elections and Evangelicals</h3>
+      <p>About 80% of white evangelicals tend to vote Republican. This bloc is large enough to decide presidential elections, making Israel support an absolute requirement for Republican candidates.</p>
+      <div class="key-point anim">
+        <p><strong>Key number:</strong> CUFI has ~7 million members — dozens of times more than AIPAC (the primarily Jewish lobby). The biggest driver of Israel support is not the Jewish community but Christian evangelicals.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="expert">
+    <div class="content-body lang-ja visible">
+      <h3>アメリカ例外主義とキリスト教シオニズム</h3>
+      <p>アメリカの福音派のイスラエル支持を理解するには、<span class="term" data-tip-ja="アメリカは神に選ばれた特別な国であるという信念。ピューリタンの「丘の上の町」の比喩に遡る" data-tip-en="The belief that America is a nation specially chosen by God, tracing back to the Puritan 'City upon a Hill' metaphor">アメリカ例外主義</span>との交差を見る必要があります。</p>
+      <p>ピューリタンたちは自分たちのアメリカ入植を「新しい出エジプト」「新しいイスラエル」として物語りました。この「選ばれた民」意識は、アメリカのナショナル・アイデンティティに深く組み込まれています。イスラエルへの親近感は、この自己認識の投影でもあるのです。</p>
+      <h4>利益の収斂</h4>
+      <p>キリスト教シオニズムとイスラエル政府の関係は、利益の<span class="term" data-tip-ja="異なる動機を持つ集団が、共通の目的のために協力すること" data-tip-en="When groups with different motivations cooperate toward a common goal">収斂</span>です。福音派は終末論的な動機で支持し、イスラエル政府は政治的・外交的利益のためにこの支持を歓迎します。ネタニヤフ首相はCUFIの大会に繰り返し出席し、福音派を「イスラエルの最良の友」と呼んでいます。</p>
+      <h4>ユダヤ人社会からの複雑な反応</h4>
+      <p>アメリカのユダヤ人コミュニティは、キリスト教シオニズムに対して複雑な感情を持っています。政治的同盟として歓迎する声がある一方で、終末論の中でユダヤ人に改宗を求めるシナリオへの警戒、福音派の国内政策（LGBTQや中絶の問題）との価値観の不一致が懸念されています。</p>
+      <div class="key-point anim">
+        <p><strong>構造的分析：</strong>キリスト教シオニズムは、「宗教・ナショナリズム・帝国」が交差する地点に位置する現象です。宗教的信念（終末論）、国家的アイデンティティ（アメリカ例外主義）、帝国的利益（中東における覇権）が、イスラエル支持という一点で収斂しています。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>American Exceptionalism and Christian Zionism</h3>
+      <p>Understanding evangelical support for Israel requires examining its intersection with <span class="term" data-tip-ja="アメリカは神に選ばれた特別な国という信念" data-tip-en="The belief that America is specially chosen by God, from the Puritan 'City upon a Hill'">American exceptionalism</span>.</p>
+      <p>The Puritans narrated their settlement as a "new Exodus" and "new Israel." This "chosen people" consciousness is deeply embedded in American national identity. Affinity for Israel is partly a projection of this self-image.</p>
+      <h4>Convergence of Interests</h4>
+      <p>The relationship between Christian Zionism and the Israeli government is one of interest <span class="term" data-tip-ja="異なる動機のグループが共通目的で協力すること" data-tip-en="Groups with different motivations cooperating toward a common goal">convergence</span>. Evangelicals support from eschatological motivation; Israel's government welcomes this for political and diplomatic gain. Netanyahu has repeatedly attended CUFI conventions, calling evangelicals "Israel's best friends."</p>
+      <h4>Complex Reactions from the Jewish Community</h4>
+      <p>American Jews have mixed feelings about Christian Zionism. Some welcome the political alliance, while others worry about the eschatological scenario demanding Jewish conversion, and about value conflicts with evangelical domestic policies on LGBTQ rights and abortion.</p>
+      <div class="key-point anim">
+        <p><strong>Structural analysis:</strong> Christian Zionism sits at the intersection of religion, nationalism, and empire. Religious conviction (eschatology), national identity (American exceptionalism), and imperial interest (Middle East hegemony) converge at the single point of Israel support.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Section 6 -->
+<section class="section" id="s6">
+<div class="section-inner">
+  <div class="section-num anim">06</div>
+  <h2 class="anim"><span class="lang-ja visible">アメリカ政治の中のシオニズム</span><span class="lang-en">Zionism in American Politics</span><span class="en-sub lang-ja visible">Lobbying, Policy, Power</span><span class="en-sub lang-en">Lobbying, Policy, Power</span></h2>
+  <p class="section-lead anim"><span class="lang-ja visible">なぜ両党ともイスラエルを支持するのか。ロビー活動、選挙資金、地政学が織りなすアメリカ政治の構造。</span><span class="lang-en">Why both parties support Israel. The structure of American politics woven from lobbying, campaign finance, and geopolitics.</span></p>
+
+  <div class="depth-content visible" data-depth="intro">
+    <div class="content-body lang-ja visible">
+      <h3>アメリカとイスラエルの「特別な関係」</h3>
+      <p>アメリカは毎年イスラエルに約38億ドル（約5700億円）の軍事援助を提供しています。これは世界最大の二国間軍事援助です。民主党も共和党も、イスラエル支持では一致しています。なぜでしょうか？</p>
+      <div class="highlight-box anim">
+        <div class="box-title">3つの理由</div>
+        <p><strong>1. 宗教：</strong>前の章で見た福音派の影響。<br><strong>2. ロビー活動：</strong>AIPACなどの組織が議員に強い影響力を持つ。<br><strong>3. 戦略的利益：</strong>中東における信頼できる同盟国としての価値。</p>
+      </div>
+      <h3>ロビー活動とは何か</h3>
+      <p>ロビー活動とは、特定の政策を実現するために政治家に働きかけることです。アメリカでは合法的な活動で、多くの国や団体がロビイストを雇っています。イスラエルに関するロビー活動は、その中でも最も組織的で影響力のあるものの一つです。</p>
+    </div>
+    <div class="content-body lang-en">
+      <h3>The U.S.-Israel "Special Relationship"</h3>
+      <p>The U.S. provides Israel with approximately $3.8 billion in military aid annually — the world's largest bilateral military aid package. Both Democrats and Republicans agree on supporting Israel. Why?</p>
+      <div class="highlight-box anim">
+        <div class="box-title">Three Reasons</div>
+        <p><strong>1. Religion:</strong> The evangelical influence from the previous chapter.<br><strong>2. Lobbying:</strong> Organizations like AIPAC wield powerful influence over Congress.<br><strong>3. Strategic interest:</strong> Israel's value as a reliable Middle East ally.</p>
+      </div>
+      <h3>What is Lobbying?</h3>
+      <p>Lobbying means working to influence politicians toward specific policies. It is legal in the U.S., and many countries and organizations hire lobbyists. The pro-Israel lobby is among the most organized and influential.</p>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="standard">
+    <div class="content-body lang-ja visible">
+      <h3>AIPACの構造と影響力</h3>
+      <p><span class="term" data-tip-ja="American Israel Public Affairs Committee。アメリカ・イスラエル公共問題委員会。1963年設立" data-tip-en="American Israel Public Affairs Committee, founded 1963">AIPAC</span>は、アメリカ最強のロビー団体の一つとされています。その影響力の源泉は：</p>
+      <ul>
+        <li><strong>選挙資金：</strong>AIPAC関連の政治活動委員会（PAC）は、議員候補者に多額の選挙資金を提供</li>
+        <li><strong>議員への直接アクセス：</strong>年次政策会議には大半の連邦議員が出席</li>
+        <li><strong>草の根ネットワーク：</strong>全米50州に活動家を配置し、選挙区レベルで圧力をかける</li>
+        <li><strong>超党派戦略：</strong>民主・共和両党に等しく働きかけ、イスラエル支持を「党派を超えた合意」に</li>
+      </ul>
+      <h3>冷戦と中東戦略</h3>
+      <p>イスラエルへの支持には地政学的な文脈もあります。冷戦期、アラブ諸国の多くがソ連に接近する中、イスラエルはアメリカにとって中東における信頼できる同盟国でした。1973年の第四次中東戦争以降、軍事援助は飛躍的に増大し、イスラエルはアメリカの中東戦略の要石となりました。</p>
+      <div class="key-point anim">
+        <p><strong>構造的理解：</strong>アメリカのイスラエル支持は、宗教（福音派）、ロビー活動（AIPAC）、戦略的利益（中東政策）の三本柱で支えられています。これが両党の「超党派的合意」を可能にしてきました。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>AIPAC's Structure and Influence</h3>
+      <p><span class="term" data-tip-ja="アメリカ・イスラエル公共問題委員会" data-tip-en="American Israel Public Affairs Committee, founded 1963">AIPAC</span> is considered one of America's most powerful lobbying organizations. Its sources of influence:</p>
+      <ul>
+        <li><strong>Campaign finance:</strong> AIPAC-affiliated PACs provide substantial funding to candidates</li>
+        <li><strong>Direct access:</strong> Most members of Congress attend the annual policy conference</li>
+        <li><strong>Grassroots network:</strong> Activists in all 50 states apply district-level pressure</li>
+        <li><strong>Bipartisan strategy:</strong> Equal outreach to both parties, making Israel support a "bipartisan consensus"</li>
+      </ul>
+      <h3>The Cold War and Middle East Strategy</h3>
+      <p>There is a geopolitical dimension too. During the Cold War, as many Arab states aligned with the Soviet Union, Israel was America's reliable Middle East ally. After the 1973 Yom Kippur War, military aid increased dramatically, making Israel the keystone of U.S. Middle East strategy.</p>
+      <div class="key-point anim">
+        <p><strong>Structural insight:</strong> U.S. Israel support rests on three pillars: religion (evangelicals), lobbying (AIPAC), and strategic interest (Middle East policy). This has enabled "bipartisan consensus."</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="expert">
+    <div class="content-body lang-ja visible">
+      <h3>「イスラエル・ロビー」論争</h3>
+      <p>2007年、政治学者ジョン・ミアシャイマーとスティーヴン・ウォルトが『イスラエル・ロビーとアメリカの外交政策』を出版し、大論争を巻き起こしました。彼らの主張の核心は：</p>
+      <ul>
+        <li>アメリカのイスラエル支持は、アメリカの国益よりもロビー団体の影響力によって維持されている</li>
+        <li>この「特別な関係」はアメリカの中東政策を歪め、テロリズムの原因にもなっている</li>
+        <li>ロビーの影響力はイスラエル批判をタブー化し、健全な政策議論を阻害している</li>
+      </ul>
+      <p>この議論に対しては「反ユダヤ主義的な陰謀論」との批判が殺到しましたが、同時に多くの政治学者が分析の一部を支持しました。</p>
+      <h4>民主党内の地殻変動</h4>
+      <p>近年、民主党内でイスラエル政策をめぐる亀裂が深まっています。バーニー・サンダース、アレクサンドリア・オカシオ＝コルテス、ラシダ・タリーブらの進歩派は、パレスチナ人の権利を明示的に支持し、イスラエルへの無条件支援に疑問を呈しています。これは長らく「超党派的合意」であったイスラエル支持に初めての構造的な亀裂を生んでいます。</p>
+      <h4>トランプ時代のシフト</h4>
+      <p>トランプ政権は、エルサレムをイスラエルの首都として承認（2017年）、ゴラン高原の主権承認（2019年）、アブラハム合意の仲介（2020年）など、イスラエルへの支持を劇的にエスカレートさせました。これにより、イスラエル支持は「超党派」から「共和党のアイデンティティ」に移行する傾向が加速しています。</p>
+      <div class="key-point anim">
+        <p><strong>政治学的視座：</strong>アメリカのイスラエル政策は、「ロビー」「選挙政治」「国家安全保障官僚」「イデオロギー（福音派＋ネオコン）」の四つの力学の交差点で形成されています。どれか一つに還元する議論（「すべてはロビーのせい」「すべては石油のため」）は不十分です。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>The "Israel Lobby" Controversy</h3>
+      <p>In 2007, political scientists John Mearsheimer and Stephen Walt published <em>The Israel Lobby and U.S. Foreign Policy</em>, igniting a firestorm. Their core argument:</p>
+      <ul>
+        <li>U.S. support for Israel is sustained more by lobby influence than by American national interest</li>
+        <li>This "special relationship" distorts U.S. Middle East policy and contributes to terrorism</li>
+        <li>The lobby's influence makes Israel criticism taboo, undermining healthy policy debate</li>
+      </ul>
+      <p>The argument was widely attacked as "antisemitic conspiracy theory," but many political scientists endorsed parts of the analysis.</p>
+      <h4>Tectonic Shifts Within the Democratic Party</h4>
+      <p>In recent years, a rift over Israel policy has deepened within the Democratic Party. Progressives like Bernie Sanders, Alexandria Ocasio-Cortez, and Rashida Tlaib explicitly support Palestinian rights and question unconditional aid. This marks the first structural crack in the long-standing "bipartisan consensus."</p>
+      <h4>The Trump Era Shift</h4>
+      <p>The Trump administration escalated Israel support dramatically: recognizing Jerusalem as Israel's capital (2017), recognizing Golan Heights sovereignty (2019), and brokering the Abraham Accords (2020). This has accelerated a trend of Israel support shifting from "bipartisan" to "Republican identity."</p>
+      <div class="key-point anim">
+        <p><strong>Political science lens:</strong> U.S. Israel policy is shaped at the intersection of four forces: lobbying, electoral politics, the national security bureaucracy, and ideology (evangelicalism + neoconservatism). Reductive arguments ("it's all the lobby" or "it's all about oil") are insufficient.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Section 7 -->
+<section class="section" id="s7">
+<div class="section-inner">
+  <div class="section-num anim">07</div>
+  <h2 class="anim"><span class="lang-ja visible">今日のシオニズムと未来</span><span class="lang-en">Zionism Today and the Future</span><span class="en-sub lang-ja visible">Where Do We Go From Here?</span><span class="en-sub lang-en">Where Do We Go From Here?</span></h2>
+  <p class="section-lead anim"><span class="lang-ja visible">シオニズムは完成したのか、それとも変容し続けるのか。現代の論争と今後の展望。</span><span class="lang-en">Has Zionism been fulfilled, or does it continue to transform? Contemporary debates and future outlook.</span></p>
+
+  <div class="depth-content visible" data-depth="intro">
+    <div class="content-body lang-ja visible">
+      <h3>シオニズムの「成功」と残された問い</h3>
+      <p>イスラエルは建国から75年以上が経ち、中東で最も強力な国家の一つとなりました。シオニズムの当初の目標——ユダヤ人の国家を建設すること——は達成されたと言えます。しかし、新たな問いが浮かび上がっています。</p>
+      <div class="highlight-box anim">
+        <div class="box-title">今日の核心的な問い</div>
+        <p>イスラエルは「ユダヤ人の国家」であると同時に「民主主義国家」であり続けることができるのか？ パレスチナ人との共存はどのような形で可能なのか？ アメリカの支持はいつまで続くのか？</p>
+      </div>
+      <h3>変わりつつある世論</h3>
+      <p>特に若い世代のアメリカ人の間で、イスラエルに対する見方が変わりつつあります。SNSやインターネットを通じて、パレスチナ人の声が直接届くようになったことが大きな要因です。かつてのような「無条件支持」は、もはや当たり前ではなくなっています。</p>
+    </div>
+    <div class="content-body lang-en">
+      <h3>Zionism's "Success" and Remaining Questions</h3>
+      <p>Israel has existed for over 75 years and is one of the most powerful states in the Middle East. Zionism's original goal — building a Jewish state — has been achieved. But new questions have emerged.</p>
+      <div class="highlight-box anim">
+        <div class="box-title">Today's Core Questions</div>
+        <p>Can Israel remain both a "Jewish state" and a "democratic state"? What form of coexistence with Palestinians is possible? How long will American support last?</p>
+      </div>
+      <h3>Shifting Public Opinion</h3>
+      <p>Views on Israel are changing, especially among younger Americans. Social media and the internet now deliver Palestinian voices directly. The era of "unconditional support" is no longer a given.</p>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="standard">
+    <div class="content-body lang-ja visible">
+      <h3>主要な論争点</h3>
+      <h4>二国家解決 vs 一国家解決</h4>
+      <p><strong>二国家解決：</strong>イスラエルとパレスチナが別々の国家として共存する案。長年の国際的合意でしたが、入植地の拡大により実現可能性が低下していると多くの専門家が指摘しています。</p>
+      <p><strong>一国家解決：</strong>一つの国家の中で全住民が平等な権利を持つ案。民主主義的ですが、「ユダヤ人国家」の性格を失うため、多くのイスラエル人が反対しています。</p>
+      <h4>BDS運動</h4>
+      <p><span class="term" data-tip-ja="Boycott, Divestment, Sanctions。イスラエルに対するボイコット・投資撤退・制裁を求める国際運動" data-tip-en="Boycott, Divestment, Sanctions — international movement calling for economic pressure on Israel">BDS運動</span>は、イスラエルに対する経済的圧力を求める国際運動です。南アフリカのアパルトヘイトに対するボイコット運動をモデルとしています。支持者は「非暴力的な抵抗手段」と主張し、批判者は「反ユダヤ主義的」と批判しています。</p>
+      <h4>アメリカ国内の政治化</h4>
+      <p>多くの米州や連邦法が、BDS運動を制限する法律を制定しています。これは「言論の自由」との緊張を生んでおり、アメリカの大学キャンパスではイスラエル・パレスチナ問題が最も論争的なテーマの一つとなっています。</p>
+      <div class="key-point anim">
+        <p><strong>重要：</strong>この問題では「シオニズム批判」と「反ユダヤ主義」の境界が激しく論争されています。イスラエルの政策を批判することと、ユダヤ人への差別は本質的に異なりますが、その線引きは政治的に利用されることもあります。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>Key Debates</h3>
+      <h4>Two-State vs. One-State Solution</h4>
+      <p><strong>Two-state:</strong> Israel and Palestine coexist as separate nations. The longstanding international consensus, but many experts say settlement expansion has made it increasingly impractical.</p>
+      <p><strong>One-state:</strong> All inhabitants share equal rights within one state. Democratic, but it would end Israel's character as a "Jewish state," which most Israelis oppose.</p>
+      <h4>The BDS Movement</h4>
+      <p><span class="term" data-tip-ja="ボイコット・投資撤退・制裁の国際運動" data-tip-en="Boycott, Divestment, Sanctions — calls for economic pressure on Israel">BDS</span> is an international movement calling for economic pressure on Israel, modeled on the anti-apartheid boycott of South Africa. Supporters call it "nonviolent resistance"; critics call it "antisemitic."</p>
+      <h4>Politicization in America</h4>
+      <p>Many U.S. states and federal bills restrict BDS activities, creating tensions with free speech. Israel-Palestine has become one of the most contentious issues on American college campuses.</p>
+      <div class="key-point anim">
+        <p><strong>Important:</strong> The boundary between "criticism of Zionism" and "antisemitism" is fiercely debated. Criticizing Israeli policy and discriminating against Jewish people are fundamentally different, but the line can be politically exploited.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="depth-content" data-depth="expert">
+    <div class="content-body lang-ja visible">
+      <h3>ポスト・シオニズムと新シオニズム</h3>
+      <p><span class="term" data-tip-ja="シオニズムの使命は建国で完了したとし、より普遍的な民主主義的価値を優先すべきだとする立場" data-tip-en="The position that Zionism's mission was completed with statehood and should yield to universal democratic values">ポスト・シオニズム</span>は、1990年代にイスラエルの「新しい歴史家」たち（ベニー・モリス、イラン・パペ等）が建国の公式ナラティブを再検討する中で台頭しました。彼らは1948年のパレスチナ人追放の実態を文書で明らかにし、シオニズムの道徳的正当性に根本的な疑問を投げかけました。</p>
+      <p>一方で、2000年代以降の第二次インティファーダや安全保障上の懸念は「新シオニズム」を強化し、イスラエル社会を右傾化させました。ポスト・シオニズムは一時期の知的潮流にとどまり、政治的には右派ナショナリズムが主流を占めています。</p>
+      <h4>人口統計の政治学</h4>
+      <p>イスラエルが実効支配する領域（イスラエル本土＋西岸＋ガザ）全体では、ユダヤ人とアラブ人の人口がほぼ拮抗しつつあります。この「人口統計の時限爆弾」は、イスラエルに三つの選択肢を突きつけます：</p>
+      <ul>
+        <li>領土を分割して二国家を実現する（ユダヤ人国家の性格を維持）</li>
+        <li>一国家として全住民に平等な権利を与える（ユダヤ人国家の終焉）</li>
+        <li>現状維持——一部の住民に完全な権利を与えない体制の継続</li>
+      </ul>
+      <p>批判者は第三の選択肢を<span class="term" data-tip-ja="法的に一つの集団が別の集団を制度的に支配する体制。南アフリカの人種隔離政策から来た用語" data-tip-en="A system of institutionalized segregation and domination. The term originates from South Africa's racial segregation policy">アパルトヘイト</span>と呼び、国際人権団体のヒューマン・ライツ・ウォッチやアムネスティ・インターナショナルもこの用語を使用する報告書を発表しています。</p>
+      <h4>アメリカ政治への帰結</h4>
+      <p>これらのすべてがアメリカ政治に跳ね返ります。世代間の断絶（若年層のイスラエル批判の増加）、党派間の断絶（共和党の無条件支持 vs 民主党進歩派の条件付き支持）、そして学問・メディア・公共空間における言論の自由をめぐる戦いが、今後のアメリカ政治を形作るでしょう。</p>
+      <div class="key-point anim">
+        <p><strong>結論的視座：</strong>シオニズムは「約束の地」という古代の観念から出発し、近代ナショナリズム、ホロコースト、冷戦地政学、キリスト教終末論、アメリカの選挙政治を経由して、今日の世界で最も論争的な政治的力の一つであり続けています。この問題を理解するための鍵は、これらの複数の層を同時に見る視座——まさにこのサイトが試みてきたこと——にあります。</p>
+      </div>
+    </div>
+    <div class="content-body lang-en">
+      <h3>Post-Zionism and Neo-Zionism</h3>
+      <p><span class="term" data-tip-ja="シオニズムの使命は建国で完了したとする立場" data-tip-en="The view that Zionism's mission was completed with statehood">Post-Zionism</span> emerged in the 1990s as Israel's "New Historians" (Benny Morris, Ilan Pappé, etc.) reexamined the founding narrative. They documented the reality of Palestinian expulsion in 1948, raising fundamental questions about Zionism's moral legitimacy.</p>
+      <p>Meanwhile, the Second Intifada and security concerns in the 2000s strengthened "neo-Zionism" and pushed Israeli society rightward. Post-Zionism remained an intellectual current; politically, right-wing nationalism dominates.</p>
+      <h4>The Politics of Demography</h4>
+      <p>Across the territory Israel effectively controls (Israel proper + West Bank + Gaza), Jewish and Arab populations are approaching parity. This "demographic time bomb" presents Israel with three choices:</p>
+      <ul>
+        <li>Divide the territory into two states (preserving the Jewish-state character)</li>
+        <li>Create one state with equal rights for all (ending the Jewish state)</li>
+        <li>Maintain the status quo — a system where some inhabitants lack full rights</li>
+      </ul>
+      <p>Critics call the third option <span class="term" data-tip-ja="一つの集団が別の集団を制度的に支配する体制" data-tip-en="Institutionalized segregation and domination, from South Africa's racial policy">apartheid</span>, and organizations like Human Rights Watch and Amnesty International have published reports using this term.</p>
+      <h4>Implications for American Politics</h4>
+      <p>All of this reverberates in American politics. The generational divide (younger Americans increasingly critical of Israel), the partisan divide (Republican unconditional support vs. Democratic progressive conditional support), and battles over free speech in academia, media, and public spaces will shape American politics for years to come.</p>
+      <div class="key-point anim">
+        <p><strong>Concluding perspective:</strong> Zionism began with an ancient idea of a "Promised Land" and passed through modern nationalism, the Holocaust, Cold War geopolitics, Christian eschatology, and American electoral politics to remain one of the most contested political forces in the world today. The key to understanding it lies in seeing all these layers simultaneously — which is precisely what this site has attempted.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<footer class="site-footer">
+  <p class="lang-ja visible">このサイトは教育目的で作成されています。特定の政治的立場を支持するものではありません。</p>
+  <p class="lang-en">This site is created for educational purposes. It does not endorse any particular political position.</p>
+</footer>
+
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+(function(){
+  let currentDepth='intro',currentLang='ja';
+
+  document.querySelectorAll('.depth-toggle button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      currentDepth=btn.dataset.depth;
+      document.querySelectorAll('.depth-toggle button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      updateContent();
+    });
+  });
+
+  document.querySelectorAll('.lang-toggle button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      currentLang=btn.dataset.lang;
+      document.querySelectorAll('.lang-toggle button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      updateContent();
+    });
+  });
+
+  function updateContent(){
+    document.querySelectorAll('.depth-content').forEach(el=>{
+      el.classList.toggle('visible',el.dataset.depth===currentDepth);
+    });
+    document.querySelectorAll('.lang-ja').forEach(el=>el.classList.toggle('visible',currentLang==='ja'));
+    document.querySelectorAll('.lang-en').forEach(el=>el.classList.toggle('visible',currentLang==='en'));
+  }
+
+  window.toggleSidebar=function(){document.getElementById('sidebar').classList.toggle('open')};
+  document.querySelectorAll('.sidebar a').forEach(a=>a.addEventListener('click',()=>document.getElementById('sidebar').classList.remove('open')));
+
+  const sections=document.querySelectorAll('.section[id]');
+  const navLinks=document.querySelectorAll('.sidebar a');
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        navLinks.forEach(l=>l.classList.remove('active'));
+        const link=document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+        if(link)link.classList.add('active');
+      }
+    });
+  },{rootMargin:'-30% 0px -60% 0px'});
+  sections.forEach(s=>obs.observe(s));
+
+  const animObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in-view')});
+  },{threshold:0.1});
+  document.querySelectorAll('.anim').forEach(el=>animObs.observe(el));
+
+  const tooltip=document.getElementById('tooltip');
+  function showTip(term){
+    const text=currentLang==='ja'?term.dataset.tipJa:term.dataset.tipEn;
+    if(!text)return;
+    tooltip.textContent=text;
+    tooltip.classList.add('show');
+    const r=term.getBoundingClientRect();
+    let left=r.left+r.width/2-160;
+    if(left<8)left=8;
+    if(left+320>window.innerWidth)left=window.innerWidth-328;
+    tooltip.style.left=left+'px';
+    tooltip.style.top=(r.bottom+8)+'px';
+  }
+  document.addEventListener('mouseover',e=>{const t=e.target.closest('.term');if(t)showTip(t)});
+  document.addEventListener('mouseout',e=>{if(e.target.closest('.term'))tooltip.classList.remove('show')});
+  document.addEventListener('click',e=>{
+    const t=e.target.closest('.term');
+    if(t){showTip(t);setTimeout(()=>tooltip.classList.remove('show'),3000)}
+    else tooltip.classList.remove('show');
+  });
+})();
+</script>
+</body>
+</html>
